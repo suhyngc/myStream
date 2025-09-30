@@ -1,1 +1,1 @@
-python lab1/main.py;
+python lab1_copy/main.py;

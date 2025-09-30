@@ -1,0 +1,34 @@
+- name: Layer0
+  core_allocation: [0, 1, 2, 3]
+  intra_core_tiling:
+    - OY, all
+  inter_core_tiling:
+    - K, 4
+
+- name: Layer1
+  core_allocation: [0, 1, 2, 3]
+  intra_core_tiling:
+    - OY, all
+  inter_core_tiling:
+    - K, 4
+
+- name: Layer2
+  core_allocation: [0, 1, 2, 3]
+  intra_core_tiling:
+    - OY, all
+  inter_core_tiling:
+    - K, 4
+
+- name: Layer3
+  core_allocation: [0, 1, 2, 3]
+  intra_core_tiling:
+    - OY, all
+  inter_core_tiling:
+    - K, 4
+
+- name: default
+  core_allocation: [0, 1, 2, 3]
+  intra_core_tiling:
+    - OY, all
+  inter_core_tiling:
+    - K, 4
