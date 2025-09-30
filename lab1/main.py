@@ -2,6 +2,7 @@ import logging as _logging
 import os
 import re
 import sys
+from collections import defaultdict
 
 sys.path.insert(0, os.getcwd())  # Insert main folder in path
 from zigzag.utils import pickle_load
@@ -143,37 +144,129 @@ def analyze_tensor_partitions_and_usage(scme):
     
     return usage_info
 
-# Function call
+# Create output directory for analysis if it doesn't exist
+analysis_dir = f"{output_folder}/analysis"
+if not os.path.exists(analysis_dir):
+    os.makedirs(analysis_dir)
+
+node_summary_file = f"{analysis_dir}/node_summary.txt"
+tensor_analysis_file = f"{analysis_dir}/tensor_analysis.txt"
+
+# First analyze workload structure
+node_types = defaultdict(int)
+node_details = defaultdict(list)
+
+for node in scme.workload.node_list:
+    node_type = type(node).__name__
+    node_id = node.id
+    node_types[node_type] += 1
+    
+    # Collect details about the node
+    details = {
+        'id': node_id,
+        'core': node.chosen_core_allocation,
+        'timing': (node.start, node.end),
+        'input_sizes': {},
+        'output_sizes': {},
+    }
+    
+    # Get input tensor sizes
+    for op, tensor in node.operand_tensors.items():
+        if op == node.output_operand:
+            details['output_sizes'][op] = tensor.size
+        else:
+            details['input_sizes'][op] = tensor.size
+            
+    node_details[node_type].append(details)
+
+# Save node summary to file
+with open(node_summary_file, 'w') as f:
+    f.write("Node Types Summary:\n")
+    f.write("=================\n")
+    for node_type, count in node_types.items():
+        f.write(f"{node_type}: {count} instances\n")
+
+    f.write("\nDetailed Node Information:\n")
+    f.write("========================\n")
+    for node_type, details_list in node_details.items():
+        f.write(f"\n{node_type} Nodes:\n")
+        f.write("=" * (len(node_type) + 7) + "\n")
+        
+        for details in details_list:
+            f.write(f"\nNode ID: {details['id']}\n")
+            f.write(f"Core: {details['core']}\n")
+            f.write(f"Execution: [{details['timing'][0]} - {details['timing'][1]}]\n")
+            
+            if details['input_sizes']:
+                f.write("Input Tensors:\n")
+                for op, size in details['input_sizes'].items():
+                    f.write(f"  {op}: {size} bits\n")
+            
+            if details['output_sizes']:
+                f.write("Output Tensors:\n")
+                for op, size in details['output_sizes'].items():
+                    f.write(f"  {op}: {size} bits\n")
+            f.write("-" * 40 + "\n")
+
+# Then run the original tensor analysis
 usage_info = analyze_tensor_partitions_and_usage(scme)
 
-# Using the results
-print("\nDetailed Tensor Usage Analysis:")
-print("================================")
+print(f"\nAnalysis files have been saved to:")
+print(f"1. Node Summary: {node_summary_file}")
+print(f"2. Tensor Analysis: {tensor_analysis_file}")
 
-# Process and print results
-from collections import defaultdict
+# Process and save tensor analysis results
 tensor_groups = defaultdict(list)
 for info in usage_info:
     tensor_groups[info['tensor_hash']].append(info)
 
-for tensor_hash, operations in tensor_groups.items():
-    print(f"\nTensor Hash: {tensor_hash}")
-    print("------------------------")
-    for op in sorted(operations, key=lambda x: x['time_start']):
-        if op.get('operation') == 'transfer':
-            print(f"Time [{op['time_start']}-{op['time_end']}]: Transfer")
-            if 'from_core' in op and 'to_core' in op:
-                print(f"  From Core {op['from_core']} to Core {op['to_core']}")
-            print(f"  Size: {op['partition_size']}/{op['total_size']} bits")
-            if 'bandwidth' in op:
-                print(f"  Bandwidth: {op['bandwidth']} bits/cycle")
-            if 'energy' in op:
-                print(f"  Energy: {op['energy']:.2e}")
-        else:
-            print(f"Time [{op['time_start']}-{op['time_end']}]: {op['operation'].capitalize()}")
-            print(f"  Core: {op['core_id']}")
-            print(f"  Node: {op['node_id']}")
-            print(f"  Size: {op['partition_size']}/{op['total_size']} bits")
-            if op['split_ranges']:
-                print(f"  Split ranges: {op['split_ranges']}")
-        print()
+with open(tensor_analysis_file, 'w') as f:
+    f.write("Tensor Usage Analysis:\n")
+    f.write("=====================\n")
+    
+    for tensor_hash, operations in tensor_groups.items():
+        f.write(f"\nTensor Hash: {tensor_hash}\n")
+        f.write("------------------------\n")
+        
+        for op in sorted(operations, key=lambda x: x['time_start']):
+            # Find the corresponding node information
+            node_info = None
+            if op.get('operation') != 'transfer':
+                for node in scme.workload.node_list:
+                    if node.id == op['node_id']:
+                        node_info = node
+                        break
+            
+            if op.get('operation') == 'transfer':
+                f.write(f"Time [{op['time_start']}-{op['time_end']}]: Transfer\n")
+                if 'from_core' in op and 'to_core' in op:
+                    f.write(f"  From Core {op['from_core']} to Core {op['to_core']}\n")
+                f.write(f"  Size: {op['partition_size']}/{op['total_size']} bits\n")
+                if 'bandwidth' in op:
+                    f.write(f"  Bandwidth: {op['bandwidth']} bits/cycle\n")
+                if 'energy' in op:
+                    f.write(f"  Energy: {op['energy']:.2e}\n")
+            else:
+                node_type = type(node_info).__name__ if node_info else "Unknown"
+                f.write(f"Time [{op['time_start']}-{op['time_end']}]: {op['operation'].capitalize()}\n")
+                f.write(f"  Core: {op['core_id']}\n")
+                f.write(f"  Node: {op['node_id']} ({node_type})\n")
+                if hasattr(node_info, 'equation'):
+                    f.write(f"  Operation: {node_info.equation}\n")
+                if hasattr(node_info, 'loop_dim_size'):
+                    f.write("  Loop Dimensions:\n")
+                    for dim, size in node_info.loop_dim_size.items():
+                        f.write(f"    {dim}: {size}\n")
+                f.write(f"  Size: {op['partition_size']}/{op['total_size']} bits\n")
+                if op['split_ranges']:
+                    f.write(f"  Split ranges: {op['split_ranges']}\n")
+                # Show which operand this tensor represents in the node's computation
+                if node_info:
+                    for op_name, tensor in node_info.operand_tensors.items():
+                        if tensor.equality_hash == tensor_hash:
+                            f.write(f"  Operand Role: {op_name}\n")
+                            if op_name == node_info.output_operand:
+                                f.write("  (This is the output tensor)\n")
+                            break
+            f.write("\n")
+
