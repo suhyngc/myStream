@@ -95,11 +95,34 @@ def analyze_tensor_partitions_and_usage(scme):
         
         # Check each operand tensor used by this node
         for op, tensor in node.operand_tensors.items():
-            # Get the split information if this tensor was split
+            # Get tensor shape and dimension information
+            tensor_shape = {}
+            if hasattr(tensor, 'shape'):
+                tensor_shape = tensor.shape
+            elif hasattr(tensor, 'loop_ranges_per_dim'):
+                tensor_shape = {dim: (end-start) for dim, (start, end) in tensor.loop_ranges_per_dim.items()}
+            
+            # Get the tiling and loop information
+            tiling_info = {}
+            loop_ranges = {}
+            loop_order = []
+            
             if hasattr(node, 'intra_core_tiling') and node.intra_core_tiling:
                 split_dims = [dim for dim, _ in node.intra_core_tiling if dim in tensor.loop_dimensions]
                 ranges = {dim: node.loop_ranges[dim] for dim in split_dims}
                 original_size = tensor.size
+                
+                # Collect tiling information
+                for dim, (size, level) in node.intra_core_tiling:
+                    if dim in tensor.loop_dimensions:
+                        tiling_info[dim] = size
+                
+                # Get loop ranges and order
+                if hasattr(node, 'loop_ranges'):
+                    loop_ranges = node.loop_ranges
+                if hasattr(node, 'loop_order'):
+                    loop_order = node.loop_order
+                
                 # Calculate partition size based on split ratio
                 partition_size = original_size
                 for dim in split_dims:
@@ -121,6 +144,10 @@ def analyze_tensor_partitions_and_usage(scme):
                 'total_size': tensor.size,
                 'partition_size': partition_size,
                 'split_ranges': ranges,
+                'shape': tensor_shape,
+                'tiling': tiling_info,
+                'loop_ranges': loop_ranges,
+                'loop_order': loop_order,
                 'node_id': node.id
             })
     
@@ -253,13 +280,45 @@ with open(tensor_analysis_file, 'w') as f:
                 f.write(f"  Node: {op['node_id']} ({node_type})\n")
                 if hasattr(node_info, 'equation'):
                     f.write(f"  Operation: {node_info.equation}\n")
-                if hasattr(node_info, 'loop_dim_size'):
-                    f.write("  Loop Dimensions:\n")
-                    for dim, size in node_info.loop_dim_size.items():
+                # Write tensor shape information
+                if op['shape']:
+                    f.write("  Tensor Shape:\n")
+                    for dim, size in op['shape'].items():
                         f.write(f"    {dim}: {size}\n")
-                f.write(f"  Size: {op['partition_size']}/{op['total_size']} bits\n")
+                
+                # Write tiling information
+                if op['tiling']:
+                    f.write("  Tiling:\n")
+                    for dim, size in op['tiling'].items():
+                        f.write(f"    {dim}: {size}\n")
+                
+                # Write loop ranges and order
+                if op['loop_ranges']:
+                    f.write("  Loop Ranges:\n")
+                    for dim, (start, end) in op['loop_ranges'].items():
+                        f.write(f"    {dim}: [{start}:{end}]\n")
+                
+                if op['loop_order']:
+                    f.write("  Loop Order: " + " -> ".join(op['loop_order']) + "\n")
+                
+                f.write(f"  Access Size: {op['partition_size']}/{op['total_size']} bits\n")
                 if op['split_ranges']:
-                    f.write(f"  Split ranges: {op['split_ranges']}\n")
+                    f.write("  Split Ranges:\n")
+                    for dim, (start, end) in op['split_ranges'].items():
+                        f.write(f"    {dim}: [{start}:{end}]\n")
+                
+                # Calculate and show memory footprint
+                f.write("  Memory Access Pattern:\n")
+                if op['tiling'] and op['loop_ranges']:
+                    total_elements = 1
+                    for dim, size in op['tiling'].items():
+                        if dim in op['loop_ranges']:
+                            start, end = op['loop_ranges'][dim]
+                            iterations = (end - start) // size
+                            total_elements *= iterations
+                    f.write(f"    Number of tile accesses: {total_elements}\n")
+                    f.write(f"    Bytes per tile: {op['partition_size']/8:.0f}\n")
+                    f.write(f"    Total data movement: {(total_elements * op['partition_size'])/8:.0f} bytes\n")
                 # Show which operand this tensor represents in the node's computation
                 if node_info:
                     for op_name, tensor in node_info.operand_tensors.items():
