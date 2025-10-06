@@ -1,3 +1,5 @@
+import logging
+
 from zigzag.datatypes import LayerOperand, MemoryOperand
 from zigzag.mapping.data_movement import FourWayDataMoving
 from zigzag.utils import pickle_deepcopy
@@ -7,6 +9,8 @@ from stream.hardware.architecture.accelerator import Accelerator
 from stream.utils import CostModelEvaluationLUT, get_too_large_operands, get_top_level_inst_bandwidth
 from stream.workload.computation.computation_node import ComputationNode
 from stream.workload.onnx_workload import ComputationNodeWorkload
+
+logger = logging.getLogger(__name__)
 
 
 class FitnessEvaluator:
@@ -64,6 +68,9 @@ class StandardFitnessEvaluator(FitnessEvaluator):
         scme.evaluate()
         energy = scme.energy
         latency = scme.latency
+        logger.info(
+            f"GA EVAL: Testing allocation {core_allocations} -> Latency: {latency:.2f}, Energy: {energy:.2f}"
+        )
         if not return_scme:
             return energy, latency
         return energy, latency, scme

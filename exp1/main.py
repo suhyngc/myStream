@@ -24,8 +24,8 @@ workload_path = "exp1/inputs/workload/4_convs.onnx"
 accelerator = "exp1/inputs/hardware/SIMD_array64.yaml"
 mapping_path = "exp1/inputs/mapping/mapping.yaml"
 mode = "lbl"
-nb_ga_generations = 4
-nb_ga_individuals = 4
+nb_ga_generations = 24
+nb_ga_individuals = 24
 ####################################################################################
 
 ################################## Parsing #########################################

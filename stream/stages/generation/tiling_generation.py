@@ -39,7 +39,7 @@ class TilingGenerationStage(Stage):
     FUSION_PARTITION_SIZE_DEFAULT = 2
 
     # Split node in this dimension to partition layer over cores. NOTE this list is ordered
-    INTER_CORE_PARTITION_DIM_DEFAULT = [LayerDim("G"), LayerDim("H"), LayerDim("K")]
+    INTER_CORE_PARTITION_DIM_DEFAULT = [LayerDim("G"), LayerDim("H"), LayerDim("OX"), LayerDim("OY"), LayerDim("K")]
 
     def __init__(
         self,

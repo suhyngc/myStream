@@ -519,12 +519,13 @@ class TiledWorkloadGenerationStage(Stage):
         the user meant to parallelize the original nodes over the given cores. Otherwise, the CO or GA will set the
         allocation later."""
         inter_core_tiling_size = get_inter_core_tiling_size(original_node)
+        logger.info(
+            f"Node {original_node}: possible_core_allocation length is "
+            f"{len(original_node.possible_core_allocation)}, inter_core_tiling_size is {inter_core_tiling_size}."
+        )
         if len(original_node.possible_core_allocation) == inter_core_tiling_size:
-            assert group_id < len(original_node.possible_core_allocation), (
-                f"Group id {group_id} too large for core allocation list {original_node.possible_core_allocation}"
-            )
-            chosen_core_allocation = original_node.possible_core_allocation[group_id]
-            tile.set_chosen_core_allocation(chosen_core_allocation)
+            core_id = original_node.possible_core_allocation[group_id]
+            tile.chosen_core_allocation = core_id
 
     def create_tile(
         self,

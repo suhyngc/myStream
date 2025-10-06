@@ -80,7 +80,10 @@ class GeneticAlgorithmAllocationStage(Stage):
             unique_node = next(n for n in self.unique_nodes if n.id == layer_id)
             if unique_node in self.unique_nodes_flexible:
                 cores = self.cost_lut.get_cores(unique_node)
-                valid_core_ids = [core.id for core in cores if core.id < len(self.unique_nodes_flexible)]
+                valid_core_ids = [core.id for core in cores]
+                # valid_core_ids = [core.id for core in cores if core.id < len(self.unique_nodes_flexible)]
+                print(valid_core_ids, self.unique_nodes_flexible)
+                # exit(1)
                 self.layer_groups_flexible.append((layer_id, group_id))
                 self.valid_allocations.append(valid_core_ids)
 
@@ -139,6 +142,11 @@ class GeneticAlgorithmAllocationStage(Stage):
             logger.info("Finished Genetic Algorithm.")
             # Return the SCME of the last individual in the hall of fame
             best_core_allocations = hof[-1]
+            unique_cores_used = sorted(list(set(best_core_allocations)))
+            logger.info(f"GA RESULT: Best allocation found: {best_core_allocations}")
+            logger.info(
+                f"GA RESULT: This allocation uses {len(unique_cores_used)} unique cores: {unique_cores_used}"
+            )
             results = self.fitness_evaluator.get_fitness(best_core_allocations, return_scme=True)
             scme = results[-1]
             yield scme, None

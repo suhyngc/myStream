@@ -161,6 +161,9 @@ class CoalaScheduler:
         done = False
         self.prefetch_constant_operands()
         while not done:
+            logger.info(
+                f"SCHEDULER STATE: Ready candidates are: {[candidate for _, candidate in self.candidates]}"
+            )
             best_candidate, preds_end = self.pop_best_candidate()
             core = self.get_allocated_core(best_candidate)
             full_tensors_this_candidate_needs, tensors_operands = self.get_tensors_needed_for_node(best_candidate)
@@ -177,6 +180,11 @@ class CoalaScheduler:
             self.check_and_sync_cores(best_candidate)
             core_idle_from = self.cores_idle_from[core.id]
             timestep = max(core_idle_from, preds_end)
+
+            free_cores = [core_id for core_id, idle_time in self.cores_idle_from.items() if idle_time <= timestep]
+            logger.info(
+                f"SCHEDULER ACTION: Scheduling {best_candidate} at timestep {timestep}. Free cores: {free_cores}"
+            )
 
             # Step 1: for operands that are too large to store in the core's memory, clear the memory so ZigZag can
             # optimize the loop ordering using the full memory size
