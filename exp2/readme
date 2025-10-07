@@ -1,0 +1,4 @@
+parse_tensors.py ---> tensor_trace.txt
+generate_flit_trace.py ---> flit_trace.txt
+generate_flit_trace_v2.py ---> flit_trace_v2.txt
+

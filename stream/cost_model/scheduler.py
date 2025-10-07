@@ -207,7 +207,11 @@ class CoalaScheduler:
                 for tensor, tensor_operand in zip(sub_tensors_this_candidate_needs, tensors_operands, strict=False)
             )
             earliest_t = core_idle_from - transfer_headstart
+#            print("This must stop")
+#            exit(1)
             for tensor, tensor_operand in zip(sub_tensors_this_candidate_needs, tensors_operands, strict=False):
+                print("in loop")
+                exit(1)
                 transfer_complete_timestep = self.schedule_tensor_transfer(
                     tensor=tensor,
                     tensor_operand=tensor_operand,
@@ -217,6 +221,8 @@ class CoalaScheduler:
                     transfer_bandwidth_fraction=transfer_bw_fraction,
                 )
                 timestep = max(timestep, transfer_complete_timestep)
+#            print("loop ended")
+#            exit(1)
 
             # Step 3: make space for the output tensor of this node
             output_tensor = best_candidate.get_output_tensor()
@@ -596,6 +602,8 @@ class CoalaScheduler:
         if non_evictable_tensors is None:
             non_evictable_tensors = []
         if self.accelerator.core_contains_tensor(tensor, receiving_core):
+            print("Always here?")
+            exit(1)
             return earliest_t
 
         tensor_available_since_timestep = self.accelerator.get_available_timestep(tensor, sending_core)
@@ -623,7 +631,8 @@ class CoalaScheduler:
             earliest_t=evictions_complete_timestep,
             bandwidth_fraction=transfer_bandwidth_fraction,
         )
-
+        
+        print("HERE")
         # Spawn the tensor on the receiving core, remove from sending core and update communication links
         transfer_link_energy_cost, transfer_memory_energy_cost = self.accelerator.register_tensor_transfer(
             tensor=tensor,
@@ -634,7 +643,7 @@ class CoalaScheduler:
             transfer_end=transfer_end,
             transfer_bandwidth_fraction=transfer_bandwidth_fraction,
         )
-
+        exit(1)
         # Register energy
         if not transfer_cause:
             came_form_offchip = sending_core == self.offchip_core

@@ -20,12 +20,12 @@ logger = _logging.getLogger(__name__)
 ####################################################################################
 
 ############################## Provide inputs ######################################
-workload_path = "exp1/inputs/workload/4_convs.onnx"
-accelerator = "exp1/inputs/hardware/SIMD_array64.yaml"
-mapping_path = "exp1/inputs/mapping/mapping.yaml"
+workload_path = "exp2/inputs/workload/4_convs.onnx"
+accelerator = "exp2/inputs/hardware/SIMD_array64.yaml"
+mapping_path = "exp2/inputs/mapping/mapping.yaml"
 mode = "lbl"
-nb_ga_generations = 16
-nb_ga_individuals = 16
+nb_ga_generations = 4
+nb_ga_individuals = 4
 ####################################################################################
 
 ################################## Parsing #########################################
@@ -47,7 +47,7 @@ percent_shown = (100,)
 
 
 ################################PATHS################################
-output_folder = f"exp1/outputs/{experiment_id}"
+output_folder = f"exp2/outputs/{experiment_id}"
 timeline_fig_path_plotly = f"{output_folder}/schedule.html"
 memory_fig_path = f"{output_folder}/memory.png"
 json_path = f"{output_folder}/scme.json"
@@ -64,7 +64,7 @@ if not os.path.exists(scme_path):
         nb_ga_generations=nb_ga_generations,
         nb_ga_individuals=nb_ga_individuals,
         experiment_id=experiment_id,
-        output_path="exp1/outputs",
+        output_path="exp2/outputs",
         skip_if_exists=True,
     )
 else:

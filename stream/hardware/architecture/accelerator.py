@@ -320,6 +320,8 @@ class Accelerator:
         sender_bw_max = sender_top_instance.ports[0].bw_max
         nb_sender_memory_reads_for_data = ceil(tensor.size / sender_bw_min)
         sender_energy = sender_top_instance.r_cost * (sender_bw_min / sender_bw_max) * nb_sender_memory_reads_for_data
+        print(sender_energy)
+        exit(1)
         # Receiver memory energy
         receiver_top_instance = receiver.get_top_memory_instance(receiver_memory_operand)
         receiver_bw_min = receiver_top_instance.ports[0].bw_min

@@ -176,6 +176,8 @@ class CommunicationManager:
         if isinstance(receiver, int):
             receiver = self.accelerator.get_core(receiver)
         links = self.get_all_links_for_pair(sender, receiver)
+        print(links)
+        exit(1)
         links = links[0]  # take only the first path
         if not links:  # When sender == receiver
             return 0, 0
