@@ -1,0 +1,11 @@
+zigzag-dse==3.8.2
+rtree
+deap
+matplotlib
+brokenaxes
+plotly
+pandas
+cerberus
+pre-commit
+gurobipy
+pydot

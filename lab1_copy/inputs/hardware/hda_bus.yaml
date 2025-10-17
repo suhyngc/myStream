@@ -1,0 +1,23 @@
+# Three compute cores + off-chip DRAM controller
+name: three_core_hda_bus
+
+cores:
+  0: ./cores/accelerator2.yaml   # compute A
+  1: ./cores/accelerator2.yaml   # compute B
+  2: ./cores/accelerator2.yaml   # compute C
+  3: ./cores/accelerator2.yaml   # compute D
+  4: ./cores/offchip.yaml        # DRAM controller
+
+offchip_core_id: 4        # core that fronts external memory
+unit_energy_cost: 0       # default link energy
+
+core_connectivity:
+  # ───── Single shared on-chip bus among all compute cores ─────
+  - type: bus
+    cores: [0, 1, 2, 3]
+    bandwidth: 8196
+
+  # ───── Same bus extended to the off-chip controller ─────
+  - type: bus
+    cores: [0, 1, 2, 3, 4]
+    bandwidth: 8196

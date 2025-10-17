@@ -1,0 +1,175 @@
+name: custom_offchip
+type: memory
+
+memories:
+  dram:
+    size: 4294967296
+    r_cost: 0
+    w_cost: 0
+    area: 0
+    latency: 100
+    operands: [I1, I2, O]
+    ports:
+      - name: rw_port_1
+        type: read_write
+        bandwidth_min: 128
+        bandwidth_max: 16384
+        allocation:
+          - I1, fh
+          - I1, tl
+          - I2, fh
+          - I2, tl
+          - O, fh
+          - O, tl
+          - O, fl
+          - O, th
+      - name: rw_port_2
+        type: read_write
+        bandwidth_min: 128
+        bandwidth_max: 16384
+        allocation:
+          - I1, fh
+          - I1, tl
+          - I2, fh
+          - I2, tl
+          - O, fh
+          - O, tl
+          - O, fl
+          - O, th
+      - name: rw_port_3
+        type: read_write
+        bandwidth_min: 128
+        bandwidth_max: 16384
+        allocation:
+          - I1, fh
+          - I1, tl
+          - I2, fh
+          - I2, tl
+          - O, fh
+          - O, tl
+          - O, fl
+          - O, th    
+      - name: rw_port_4
+        type: read_write
+        bandwidth_min: 128
+        bandwidth_max: 16384
+        allocation:
+          - I1, fh
+          - I1, tl
+          - I2, fh
+          - I2, tl
+          - O, fh
+          - O, tl
+          - O, fl
+          - O, th
+      - name: rw_port_5
+        type: read_write
+        bandwidth_min: 128
+        bandwidth_max: 16384
+        allocation:
+          - I1, fh
+          - I1, tl
+          - I2, fh
+          - I2, tl
+          - O, fh
+          - O, tl
+          - O, fl
+          - O, th
+      - name: rw_port_6
+        type: read_write
+        bandwidth_min: 128
+        bandwidth_max: 16384
+        allocation:
+          - I1, fh
+          - I1, tl
+          - I2, fh
+          - I2, tl
+          - O, fh
+          - O, tl
+          - O, fl
+          - O, th    
+      - name: rw_port_7
+        type: read_write
+        bandwidth_min: 128
+        bandwidth_max: 16384
+        allocation:
+          - I1, fh
+          - I1, tl
+          - I2, fh
+          - I2, tl
+          - O, fh
+          - O, tl
+          - O, fl
+          - O, th
+      - name: rw_port_8
+        type: read_write
+        bandwidth_min: 128
+        bandwidth_max: 16384
+        allocation:
+          - I1, fh
+          - I1, tl
+          - I2, fh
+          - I2, tl
+          - O, fh
+          - O, tl
+          - O, fl
+          - O, th
+      - name: rw_port_9
+        type: read_write
+        bandwidth_min: 128
+        bandwidth_max: 16384
+        allocation:
+          - I1, fh
+          - I1, tl
+          - I2, fh
+          - I2, tl
+          - O, fh
+          - O, tl
+          - O, fl
+          - O, th       
+      - name: rw_port_10
+        type: read_write
+        bandwidth_min: 128
+        bandwidth_max: 16384
+        allocation:
+          - I1, fh
+          - I1, tl
+          - I2, fh
+          - I2, tl
+          - O, fh
+          - O, tl
+          - O, fl
+          - O, th
+      - name: rw_port_11
+        type: read_write
+        bandwidth_min: 128
+        bandwidth_max: 16384
+        allocation:
+          - I1, fh
+          - I1, tl
+          - I2, fh
+          - I2, tl
+          - O, fh
+          - O, tl
+          - O, fl
+          - O, th
+      - name: rw_port_12
+        type: read_write
+        bandwidth_min: 128
+        bandwidth_max: 16384
+        allocation:
+          - I1, fh
+          - I1, tl
+          - I2, fh
+          - I2, tl
+          - O, fh
+          - O, tl
+          - O, fl
+          - O, th    
+    served_dimensions: [D1, D2]
+
+operational_array:
+  unit_energy: 0
+  unit_area: 0
+  dimensions: [D1, D2]
+  sizes: [0, 0]

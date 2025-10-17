@@ -1,0 +1,43 @@
+name: shared_testing_core1
+type: compute
+
+memories:
+  sram_64KB:
+    size: 524288
+    r_cost: 26.56
+    w_cost: 30.8
+    area: 0
+    latency: 1
+    operands: [I1, I2, O]
+    ports:
+      - name: r_port_1
+        type: read
+        bandwidth_min: 64
+        bandwidth_max: 512
+        allocation:
+          - I1, tl
+          - I2, tl
+          - O, tl
+          - O, th
+      - name: w_port_1
+        type: write
+        bandwidth_min: 64
+        bandwidth_max: 512
+        allocation:
+          - I1, fh
+          - I2, fh
+          - O, fh
+          - O, fl
+    served_dimensions: [D1, D2]
+
+operational_array:
+  unit_energy: 0.04 # pJ
+  unit_area: 1 # unit
+  dimensions: [D1, D2]
+  sizes: [16, 16]
+
+dataflows:
+  D1: 
+    - K, 16
+  D2: 
+    - C, 16

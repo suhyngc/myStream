@@ -1,0 +1,9 @@
+parse_tensors.py ---> tensor_trace.txt				origin assigned immediately when new tensor is up
+parse_tensors_v2.py ---> tensor_trace_v2.txt		origin assigned later randomly
+
+generate_flit_trace.py ---> flit_trace.txt			packet length = N
+generate_flit_trace_v2.py ---> flit_trace_v2.txt	packet length = 1
+generate_flit_trace_v3.py ---> flit_trace_v3.txt	injection timing is totally independent from tensor timestamp -- only sequence kept
+generate_flit_trace_v4.py ---> flit_trace_v4.txt	flits are injected in parallel from different sources
+
+

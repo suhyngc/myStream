@@ -1,0 +1,254 @@
+# 8 × 8 SIMD chiplet mesh plus a package-level DRAM controller
+# DRAM Access is expensive and link is free, so with right amout of on-chip buffer size, DRAM access from anywhere won't happen.
+# DRAM bus bandwidth has to be large enough, latency short, energy super high
+name: SIMD_array64
+
+cores:     # id → YAML description
+  0:  simd.yaml
+  1:  simd.yaml
+  2:  simd.yaml
+  3:  simd.yaml
+  4:  simd.yaml
+  5:  simd.yaml
+  6:  simd.yaml
+  7:  simd.yaml
+  8:  simd.yaml
+  9:  simd.yaml
+  10: simd.yaml
+  11: simd.yaml
+  12: simd.yaml
+  13: simd.yaml
+  14: simd.yaml
+  15: simd.yaml
+  16: simd.yaml
+  17: simd.yaml
+  18: simd.yaml
+  19: simd.yaml
+  20: simd.yaml
+  21: simd.yaml
+  22: simd.yaml
+  23: simd.yaml
+  24: simd.yaml
+  25: simd.yaml
+  26: simd.yaml
+  27: simd.yaml
+  28: simd.yaml
+  29: simd.yaml
+  30: simd.yaml
+  31: simd.yaml
+  32: simd.yaml
+  33: simd.yaml
+  34: simd.yaml
+  35: simd.yaml
+  36: simd.yaml
+  37: simd.yaml
+  38: simd.yaml
+  39: simd.yaml
+  40: simd.yaml
+  41: simd.yaml
+  42: simd.yaml
+  43: simd.yaml
+  44: simd.yaml
+  45: simd.yaml
+  46: simd.yaml
+  47: simd.yaml
+  48: simd.yaml
+  49: simd.yaml
+  50: simd.yaml
+  51: simd.yaml
+  52: simd.yaml
+  53: simd.yaml
+  54: simd.yaml
+  55: simd.yaml
+  56: simd.yaml
+  57: simd.yaml
+  58: simd.yaml
+  59: simd.yaml
+  60: simd.yaml
+  61: simd.yaml
+  62: simd.yaml
+  63: simd.yaml
+  64: offchip.yaml      # DRAM controller
+
+offchip_core_id: 64           # external-memory interface
+unit_energy_cost: 0           # global default
+
+core_connectivity:
+  # ───────── 2-D mesh links (bandwidth 32 each) ─────────
+  - {type: link, cores: [0, 1], bandwidth: 1024}
+  - {type: link, cores: [0, 8], bandwidth: 1024}
+  - {type: link, cores: [1, 2], bandwidth: 1024}
+  - {type: link, cores: [1, 9], bandwidth: 1024}
+  - {type: link, cores: [2, 3], bandwidth: 1024}
+  - {type: link, cores: [2, 10], bandwidth: 1024}
+  - {type: link, cores: [3, 4], bandwidth: 1024}
+  - {type: link, cores: [3, 11], bandwidth: 1024}
+  - {type: link, cores: [4, 5], bandwidth: 1024}
+  - {type: link, cores: [4, 12], bandwidth: 1024}
+  - {type: link, cores: [5, 6], bandwidth: 1024}
+  - {type: link, cores: [5, 13], bandwidth: 1024}
+  - {type: link, cores: [6, 7], bandwidth: 1024}
+  - {type: link, cores: [6, 14], bandwidth: 1024}
+  - {type: link, cores: [7, 15], bandwidth: 1024}
+  - {type: link, cores: [8, 9], bandwidth: 1024}
+  - {type: link, cores: [8, 16], bandwidth: 1024}
+  - {type: link, cores: [9, 10], bandwidth: 1024}
+  - {type: link, cores: [9, 17], bandwidth: 1024}
+  - {type: link, cores: [10, 11], bandwidth: 1024}
+  - {type: link, cores: [10, 18], bandwidth: 1024}
+  - {type: link, cores: [11, 12], bandwidth: 1024}
+  - {type: link, cores: [11, 19], bandwidth: 1024}
+  - {type: link, cores: [12, 13], bandwidth: 1024}
+  - {type: link, cores: [12, 20], bandwidth: 1024}
+  - {type: link, cores: [13, 14], bandwidth: 1024}
+  - {type: link, cores: [13, 21], bandwidth: 1024}
+  - {type: link, cores: [14, 15], bandwidth: 1024}
+  - {type: link, cores: [14, 22], bandwidth: 1024}
+  - {type: link, cores: [15, 23], bandwidth: 1024}
+  - {type: link, cores: [16, 17], bandwidth: 1024}
+  - {type: link, cores: [16, 24], bandwidth: 1024}
+  - {type: link, cores: [17, 18], bandwidth: 1024}
+  - {type: link, cores: [17, 25], bandwidth: 1024}
+  - {type: link, cores: [18, 19], bandwidth: 1024}
+  - {type: link, cores: [18, 26], bandwidth: 1024}
+  - {type: link, cores: [19, 20], bandwidth: 1024}
+  - {type: link, cores: [19, 27], bandwidth: 1024}
+  - {type: link, cores: [20, 21], bandwidth: 1024}
+  - {type: link, cores: [20, 28], bandwidth: 1024}
+  - {type: link, cores: [21, 22], bandwidth: 1024}
+  - {type: link, cores: [21, 29], bandwidth: 1024}
+  - {type: link, cores: [22, 23], bandwidth: 1024}
+  - {type: link, cores: [22, 30], bandwidth: 1024}
+  - {type: link, cores: [23, 31], bandwidth: 1024}
+  - {type: link, cores: [24, 25], bandwidth: 1024}
+  - {type: link, cores: [24, 32], bandwidth: 1024}
+  - {type: link, cores: [25, 26], bandwidth: 1024}
+  - {type: link, cores: [25, 33], bandwidth: 1024}
+  - {type: link, cores: [26, 27], bandwidth: 1024}
+  - {type: link, cores: [26, 34], bandwidth: 1024}
+  - {type: link, cores: [27, 28], bandwidth: 1024}
+  - {type: link, cores: [27, 35], bandwidth: 1024}
+  - {type: link, cores: [28, 29], bandwidth: 1024}
+  - {type: link, cores: [28, 36], bandwidth: 1024}
+  - {type: link, cores: [29, 30], bandwidth: 1024}
+  - {type: link, cores: [29, 37], bandwidth: 1024}
+  - {type: link, cores: [30, 31], bandwidth: 1024}
+  - {type: link, cores: [30, 38], bandwidth: 1024}
+  - {type: link, cores: [31, 39], bandwidth: 1024}
+  - {type: link, cores: [32, 33], bandwidth: 1024}
+  - {type: link, cores: [32, 40], bandwidth: 1024}
+  - {type: link, cores: [33, 34], bandwidth: 1024}
+  - {type: link, cores: [33, 41], bandwidth: 1024}
+  - {type: link, cores: [34, 35], bandwidth: 1024}
+  - {type: link, cores: [34, 42], bandwidth: 1024}
+  - {type: link, cores: [35, 36], bandwidth: 1024}
+  - {type: link, cores: [35, 43], bandwidth: 1024}
+  - {type: link, cores: [36, 37], bandwidth: 1024}
+  - {type: link, cores: [36, 44], bandwidth: 1024}
+  - {type: link, cores: [37, 38], bandwidth: 1024}
+  - {type: link, cores: [37, 45], bandwidth: 1024}
+  - {type: link, cores: [38, 39], bandwidth: 1024}
+  - {type: link, cores: [38, 46], bandwidth: 1024}
+  - {type: link, cores: [39, 47], bandwidth: 1024}
+  - {type: link, cores: [40, 41], bandwidth: 1024}
+  - {type: link, cores: [40, 48], bandwidth: 1024}
+  - {type: link, cores: [41, 42], bandwidth: 1024}
+  - {type: link, cores: [41, 49], bandwidth: 1024}
+  - {type: link, cores: [42, 43], bandwidth: 1024}
+  - {type: link, cores: [42, 50], bandwidth: 1024}
+  - {type: link, cores: [43, 44], bandwidth: 1024}
+  - {type: link, cores: [43, 51], bandwidth: 1024}
+  - {type: link, cores: [44, 45], bandwidth: 1024}
+  - {type: link, cores: [44, 52], bandwidth: 1024}
+  - {type: link, cores: [45, 46], bandwidth: 1024}
+  - {type: link, cores: [45, 53], bandwidth: 1024}
+  - {type: link, cores: [46, 47], bandwidth: 1024}
+  - {type: link, cores: [46, 54], bandwidth: 1024}
+  - {type: link, cores: [47, 55], bandwidth: 1024}
+  - {type: link, cores: [48, 49], bandwidth: 1024}
+  - {type: link, cores: [48, 56], bandwidth: 1024}
+  - {type: link, cores: [49, 50], bandwidth: 1024}
+  - {type: link, cores: [49, 57], bandwidth: 1024}
+  - {type: link, cores: [50, 51], bandwidth: 1024}
+  - {type: link, cores: [50, 58], bandwidth: 1024}
+  - {type: link, cores: [51, 52], bandwidth: 1024}
+  - {type: link, cores: [51, 59], bandwidth: 1024}
+  - {type: link, cores: [52, 53], bandwidth: 1024}
+  - {type: link, cores: [52, 60], bandwidth: 1024}
+  - {type: link, cores: [53, 54], bandwidth: 1024}
+  - {type: link, cores: [53, 61], bandwidth: 1024}
+  - {type: link, cores: [54, 55], bandwidth: 1024}
+  - {type: link, cores: [54, 62], bandwidth: 1024}
+  - {type: link, cores: [55, 63], bandwidth: 1024}
+  - {type: link, cores: [56, 57], bandwidth: 1024}
+  - {type: link, cores: [57, 58], bandwidth: 1024}
+  - {type: link, cores: [58, 59], bandwidth: 1024}
+  - {type: link, cores: [59, 60], bandwidth: 1024}
+  - {type: link, cores: [60, 61], bandwidth: 1024}
+  - {type: link, cores: [61, 62], bandwidth: 1024}
+  - {type: link, cores: [62, 63], bandwidth: 1024}
+  - {type: link, cores: [64, 0], bandwidth: 1024}
+  - {type: link, cores: [64, 1], bandwidth: 1024}
+  - {type: link, cores: [64, 2], bandwidth: 1024}
+  - {type: link, cores: [64, 3], bandwidth: 1024}
+  - {type: link, cores: [64, 4], bandwidth: 1024}
+  - {type: link, cores: [64, 5], bandwidth: 1024}
+  - {type: link, cores: [64, 6], bandwidth: 1024}
+  - {type: link, cores: [64, 7], bandwidth: 1024}
+  - {type: link, cores: [64, 8], bandwidth: 1024}
+  - {type: link, cores: [64, 9], bandwidth: 1024}
+  - {type: link, cores: [64, 10], bandwidth: 1024}
+  - {type: link, cores: [64, 11], bandwidth: 1024}
+  - {type: link, cores: [64, 12], bandwidth: 1024}
+  - {type: link, cores: [64, 13], bandwidth: 1024}
+  - {type: link, cores: [64, 14], bandwidth: 1024}
+  - {type: link, cores: [64, 15], bandwidth: 1024}
+  - {type: link, cores: [64, 16], bandwidth: 1024}
+  - {type: link, cores: [64, 17], bandwidth: 1024}
+  - {type: link, cores: [64, 18], bandwidth: 1024}
+  - {type: link, cores: [64, 19], bandwidth: 1024}
+  - {type: link, cores: [64, 20], bandwidth: 1024}
+  - {type: link, cores: [64, 21], bandwidth: 1024}
+  - {type: link, cores: [64, 22], bandwidth: 1024}
+  - {type: link, cores: [64, 23], bandwidth: 1024}
+  - {type: link, cores: [64, 24], bandwidth: 1024}
+  - {type: link, cores: [64, 25], bandwidth: 1024}
+  - {type: link, cores: [64, 26], bandwidth: 1024}
+  - {type: link, cores: [64, 27], bandwidth: 1024}
+  - {type: link, cores: [64, 28], bandwidth: 1024}
+  - {type: link, cores: [64, 29], bandwidth: 1024}
+  - {type: link, cores: [64, 30], bandwidth: 1024}
+  - {type: link, cores: [64, 31], bandwidth: 1024}
+  - {type: link, cores: [64, 32], bandwidth: 1024}
+  - {type: link, cores: [64, 33], bandwidth: 1024}
+  - {type: link, cores: [64, 34], bandwidth: 1024}
+  - {type: link, cores: [64, 35], bandwidth: 1024}
+  - {type: link, cores: [64, 36], bandwidth: 1024}
+  - {type: link, cores: [64, 37], bandwidth: 1024}
+  - {type: link, cores: [64, 38], bandwidth: 1024}
+  - {type: link, cores: [64, 39], bandwidth: 1024}
+  - {type: link, cores: [64, 40], bandwidth: 1024}
+  - {type: link, cores: [64, 41], bandwidth: 1024}
+  - {type: link, cores: [64, 42], bandwidth: 1024}
+  - {type: link, cores: [64, 43], bandwidth: 1024}
+  - {type: link, cores: [64, 44], bandwidth: 1024}
+  - {type: link, cores: [64, 45], bandwidth: 1024}
+  - {type: link, cores: [64, 46], bandwidth: 1024}
+  - {type: link, cores: [64, 47], bandwidth: 1024}
+  - {type: link, cores: [64, 48], bandwidth: 1024}
+  - {type: link, cores: [64, 49], bandwidth: 1024}
+  - {type: link, cores: [64, 50], bandwidth: 1024}
+  - {type: link, cores: [64, 51], bandwidth: 1024}
+  - {type: link, cores: [64, 52], bandwidth: 1024}
+  - {type: link, cores: [64, 53], bandwidth: 1024}
+  - {type: link, cores: [64, 54], bandwidth: 1024}
+  - {type: link, cores: [64, 55], bandwidth: 1024}
+  - {type: link, cores: [64, 56], bandwidth: 1024}
+  - {type: link, cores: [64, 57], bandwidth: 1024}
+  - {type: link, cores: [64, 58], bandwidth: 1024}
+  - {type: link, cores: [64, 59], bandwidth: 1024}
+  - {type: link, cores: [64, 60], bandwidth: 1024}
+  - {type: link, cores: [64, 61], bandwidth: 1024}
+  - {type: link, cores: [64, 62], bandwidth: 1024}
+  - {type: link, cores: [64, 63], bandwidth: 1024}
+  
