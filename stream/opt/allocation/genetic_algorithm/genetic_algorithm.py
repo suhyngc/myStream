@@ -68,7 +68,9 @@ class GeneticAlgorithm:
 
         individual_length_threshold = 10
         if self.individual_length > individual_length_threshold:
-            self.toolbox.register("mate", tools.cxOrdered)  # for big graphs use cxOrdered crossover function
+            # Use cxUniform for allocation problems (allows repeated values)
+            # cxOrdered is only for permutation problems where each value appears once
+            self.toolbox.register("mate", tools.cxUniform, indpb=0.5)  # for big graphs use uniform crossover
         else:
             self.toolbox.register("mate", tools.cxTwoPoint)  # for small graphs use two point crossover function
 
